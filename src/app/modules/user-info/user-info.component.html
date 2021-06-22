@@ -1,0 +1,31 @@
+<div class="container pt-3">
+  <div>
+    <a class="h1 link-primary" [routerLink]="['/list-of-users']">Go back to the list</a>
+  </div>
+  <mat-card class="example-card my-4" *ngIf="user">
+    <mat-card-header>
+      <mat-card-title>Name: {{user.name}}</mat-card-title>
+      <mat-card-subtitle>Surname: {{user.username}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="mx-3">
+      <div class="my-2">
+        <h5 class="fw-bold">Company info:</h5>
+        <ul class="list-group">
+          <li class="list-group-item border-0">Name: <b>{{user.company.name}}</b></li>
+          <li class="list-group-item border-0">Catch Phrase: <b>{{user.company.catchPhrase}}</b></li>
+          <li class="list-group-item border-0">Bs: <b>{{user.company.bs}}</b></li>
+        </ul>
+      </div>
+      <div class="my-2">
+        <h5 class="fw-bold">Address info:</h5>
+        <ul class="list-group">
+          <li class="list-group-item border-0">City: <b>{{user.address.city}}</b></li>
+          <li class="list-group-item border-0">Street: <b>{{user.address.street}}</b></li>
+          <li class="list-group-item border-0">Suite: <b>{{user.address.suite}}</b></li>
+          <li class="list-group-item border-0">Zipcode: <b>{{user.address.zipcode}}</b></li>
+        </ul>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
