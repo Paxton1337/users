@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@models/user';
 import { UserService } from '@shared/user.service';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 @Component({
@@ -11,7 +13,7 @@ import { map, tap } from 'rxjs/operators';
 })
 export class ListOfUsersComponent implements OnInit {
 
-  users: User[];
+  users$: Observable<User[]>;
   displayedColumns: string[] = ['name', 'email'];
   constructor(private service: UserService, private route: Router) { }
 
@@ -20,13 +22,13 @@ export class ListOfUsersComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.service.usersList$.pipe(
+    this.users$ = this.service.usersList$.pipe(
       map((users: User[]) => users.map((user: User) => ({
         id: user.id,
         name: user.name,
         email: user.email
       })))
-    ).subscribe(users => this.users = users);
+    );
   }
 
   getRecord(user: User): void {

@@ -2,7 +2,7 @@
   <div>
     <a class="h1 link-primary" [routerLink]="['/list-of-users']">Go back to the list</a>
   </div>
-  <mat-card class="example-card my-4" *ngIf="user">
+  <mat-card class="example-card my-4" *ngIf="user$ | async as user">
     <mat-card-header>
       <mat-card-title>Name: {{user.name}}</mat-card-title>
       <mat-card-subtitle>Surname: {{user.username}}</mat-card-subtitle>

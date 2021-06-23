@@ -2,7 +2,7 @@
 
   <h1>Table with users</h1>
 
-  <table mat-table [dataSource]="users" class="mat-elevation-z8">
+  <table mat-table [dataSource]="users$ | async" class="mat-elevation-z8">
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">

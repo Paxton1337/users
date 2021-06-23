@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@models/user';
 import { UserService } from '@shared/user.service';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -11,18 +12,13 @@ import { tap } from 'rxjs/operators';
 })
 export class UserInfoComponent implements OnInit {
 
-  user: User;
+  user$: Observable<User>;
 
   constructor(private service: UserService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.getUser();
-  }
-
-  getUser() {
     const userId = +this.route.snapshot.params.id;
-    this.service.userInfo$.subscribe(user => this.user = user);
-    if(userId !== this.user?.id) this.service._userInfo$.next(userId);
+    this.user$ = this.service.userInfo$;
+    this.service._userInfo$.next(userId);
   }
-
 }

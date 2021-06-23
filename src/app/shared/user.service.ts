@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 })
 export class UserService {
 
-  _userInfo$ = new ReplaySubject(1);
+  _userInfo$ = new BehaviorSubject(0);
   _usersList$ = new BehaviorSubject(1);
 
   userInfo$ = this._userInfo$.pipe(
