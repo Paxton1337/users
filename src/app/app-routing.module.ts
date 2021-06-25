@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'list-of-users', pathMatch: 'full'},
-  { path: 'list-of-users', loadChildren: () => import('./modules/list-of-users/list-of-users.module').then(m => m.ListOfUsersModule) },
-  { path: 'user-info', loadChildren: () => import('./modules/user-info/user-info.module').then(m => m.UserInfoModule) }
+  { path: '', redirectTo: 'users', pathMatch: 'full'},
+  { path: 'users', loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule) }
 ];
 
 @NgModule({

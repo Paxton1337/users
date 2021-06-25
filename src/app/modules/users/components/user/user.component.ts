@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@models/user';
 import { UserService } from '@shared/user.service';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-user-info',
-  templateUrl: './user-info.component.html',
-  styleUrls: ['./user-info.component.scss']
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserInfoComponent implements OnInit {
+export class UserComponent implements OnInit {
 
   user$: Observable<User>;
 
@@ -30,4 +31,5 @@ export class UserInfoComponent implements OnInit {
       })
     );
   }
+
 }
