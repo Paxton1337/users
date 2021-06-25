@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '@models/user';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { filter, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { filter, map, publishLast, share, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 
@@ -10,32 +10,39 @@ import { Subject } from 'rxjs';
 })
 export class UserService {
 
-  _userInfo$ = new BehaviorSubject(0);
-  _usersList$ = new BehaviorSubject(1);
-
-  userInfo$ = this._userInfo$.pipe(
-    filter(Boolean),
-    tap(console.log),
-    switchMap((val: number) =>
-      val ? this.getOne(val) : of(null)
-    ),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  )
-
-  usersList$ = this._usersList$.pipe(
-    filter(Boolean),
-    switchMap((val) => val ? this.getMany() : of(null)),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  )
-
+  usersList$: Observable<User[]>;
+  userInfo$: Observable<User>;
 
   constructor(private http: HttpClient) { }
 
   getMany(): Observable<User[]> {
-    return this.http.get<User[]>('https://jsonplaceholder.typicode.com/users');
+
+    if (!this.usersList$) {
+      this.usersList$ = this.http.get<User[]>('https://jsonplaceholder.typicode.com/users').pipe(
+        map((users: User[]) => users.map((user: User) => ({
+          id: user.id,
+          name: user.name,
+          email: user.email
+        }))),
+        shareReplay(1)
+      );
+    }
+
+    return this.usersList$;
   }
 
-  getOne(id: number): Observable<User> {
-    return this.http.get<User>('https://jsonplaceholder.typicode.com/users/' + id);
+  getOne(userId: number): Observable<User> {
+
+    if (!this.userInfo$) {
+      this.userInfo$ = this.http.get<User>('https://jsonplaceholder.typicode.com/users/' + userId).pipe(
+        shareReplay(1)
+      );
+    }
+
+    return this.userInfo$;
+  }
+
+  clearUserCache(): void {
+    this.userInfo$ = null;
   }
 }

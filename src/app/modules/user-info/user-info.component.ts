@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@models/user';
 import { UserService } from '@shared/user.service';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-info',
@@ -18,7 +18,16 @@ export class UserInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = +this.route.snapshot.params.id;
-    this.user$ = this.service.userInfo$;
-    this.service._userInfo$.next(userId);
+
+    this.user$ = this.service.getOne(userId).pipe(
+      switchMap(user => {
+        if (user.id !== userId) {
+          this.service.clearUserCache();
+          return this.service.getOne(userId);
+        } else {
+          return of(user);
+        }
+      })
+    );
   }
 }

@@ -4,7 +4,7 @@ import { User } from '@models/user';
 import { UserService } from '@shared/user.service';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-of-users',
@@ -14,24 +14,17 @@ import { map, tap } from 'rxjs/operators';
 export class ListOfUsersComponent implements OnInit {
 
   users$: Observable<User[]>;
+
   displayedColumns: string[] = ['name', 'email'];
+
   constructor(private service: UserService, private route: Router) { }
 
   ngOnInit(): void {
-    this.getUsers();
-  }
-
-  getUsers(): void {
-    this.users$ = this.service.usersList$.pipe(
-      map((users: User[]) => users.map((user: User) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email
-      })))
-    );
+    this.users$ = this.service.getMany();
   }
 
   getRecord(user: User): void {
     this.route.navigate(['user-info/' + user.id]);
   }
+
 }
